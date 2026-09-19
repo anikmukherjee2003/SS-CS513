@@ -1,0 +1,4 @@
+This is written using original fd.
+This is written using dup fd.
+This is written using dup2 fd.
+This is written using fcntl fd.
