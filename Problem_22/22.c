@@ -45,7 +45,7 @@ int main() {
         printf("Parent wrote in the file.\n");
         close(fd);
     }
-    close(fd);
+    
     return 0;
 }
 

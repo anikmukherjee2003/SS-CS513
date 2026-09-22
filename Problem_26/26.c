@@ -15,7 +15,7 @@
 
 int main() {
     char *command = "./a.out";
-    char *name = "Aayank Singhai (MT2025001)";
+    char *name = "Anik Mukherjee";
     char *args[] = {command, name, NULL};
 
     execvp(command, args);

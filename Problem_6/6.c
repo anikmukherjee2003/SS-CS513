@@ -10,21 +10,45 @@
  */
 
 
+
 #include <stdio.h>
 #include <unistd.h>
+#include <errno.h>
+#include <stdlib.h>
 
-int main(){
-
+int main() {
     char buffer[1024];
-    ssize_t bytesRead;
 
-    bytesRead = read(0, buffer, sizeof(buffer)-1);// read(stdin, buffer, sizeof(buffer)-1) to leave space for null terminator
+    ssize_t bytesRead = read(STDIN_FILENO, buffer, sizeof(buffer));
 
-    if(bytesRead>0){
-        buffer[bytesRead]= '\0';
-        write(1, buffer, bytesRead);
+    if (bytesRead < 0) {
+        perror("read");
+        return EXIT_FAILURE;
     }
+
+    ssize_t totalWritten = 0;
+
+    while (totalWritten < bytesRead) {
+        ssize_t n = write(
+            STDOUT_FILENO,
+            buffer + totalWritten,
+            bytesRead - totalWritten
+        );
+
+        if (n < 0) {
+            perror("write");
+            return EXIT_FAILURE;
+        }
+
+        if (n == 0) {
+            break;
+        }
+
+        totalWritten += n;
+    }
+
     printf("Bytes read: %zd\n", bytesRead);
+
     return 0;
 }
 

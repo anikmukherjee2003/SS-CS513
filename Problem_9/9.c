@@ -9,33 +9,44 @@
  */
 
 
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/stat.h>
 #include <time.h>
 
-void print_file_info(const char *fileInfo){
-    struct stat file_stat; 
-    printf("\nFile: %s\n", fileInfo);
-    printf("Inode: %ld\n",(long)file_stat.st_ino);
-    printf("No. of hard links: %ld\n", (long)file_stat.st_nlink);
-    printf("UID: %d\n", file_stat.st_uid);
-    printf("GID: %d\n", file_stat.st_gid);
-    printf("Size: %ld bytes\n", (long)file_stat.st_size);
-    printf("Block Size: %ld bytes\n", (long)file_stat.st_blksize);
-    printf("No. of Blocks: %ld\n",(long) file_stat.st_blocks);
-    // Use the `ctime` function in `time.h` header to convert the timestamp in epoch to a more human readable form
-	printf("Last Access: %s", ctime(&file_stat.st_atime));
-	printf("Last Modification: %s", ctime(&file_stat.st_mtime));
-	printf("Time of Last change: %s", ctime(&file_stat.st_ctime));
-}
+int main(int argc, char *argv[])
+{
+    struct stat info;
 
-int main(){
-    const char *fileInfo = "9.txt";
-    print_file_info(fileInfo);
+    // Check whether filename was provided
+    if (argc != 2) {
+        printf("Usage: %s <filename>\n", argv[0]);
+        return 1;
+    }
+
+    // Get file metadata
+    if (stat(argv[1], &info) == -1) {
+        perror("stat");
+        return 1;
+    }
+
+    printf("File: %s\n", argv[1]);
+    printf("Inode number: %ld\n", (long)info.st_ino);
+    printf("Number of hard links: %ld\n", (long)info.st_nlink);
+    printf("User ID: %ld\n", (long)info.st_uid);
+    printf("Group ID: %ld\n", (long)info.st_gid);
+    printf("File size: %ld bytes\n", (long)info.st_size);
+    printf("Preferred block size: %ld bytes\n",
+           (long)info.st_blksize);
+    printf("Allocated blocks: %ld\n", (long)info.st_blocks);
+
+    printf("Last access: %s", ctime(&info.st_atime));
+    printf("Last modification: %s", ctime(&info.st_mtime));
+    printf("Last status change: %s", ctime(&info.st_ctime));
+
     return 0;
 }
-
 
 
 

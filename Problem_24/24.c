@@ -13,23 +13,41 @@
 #include <sys/types.h>
 #include <unistd.h>
 #include <stdio.h>
+#include <stdlib.h>
 
-int main(){
+int main() {
+    pid_t pid = fork();
 
-	if(fork()){
-		printf("Parent process PID: %d\n", getpid());
-        printf("Putting Parent process to sleep for 5...\n");
+    if (pid < 0) {
+        perror("fork");
+        return 1;
+    }
+
+    if (pid > 0) {
+        printf("Parent PID: %d\n", getpid());
+        printf("Child PID: %d\n", pid);
+        printf("Parent sleeping for 5 seconds...\n");
+        fflush(stdout);
+
         sleep(5);
-		printf("Parent is awake\n");
-        printf("Exiting parent!\n");
-		_exit(0);
-	}else{
-		printf("Child process PID: %d\n", getpid());
-        printf("Putting Child process to sleep for 10s!\n");
+
+        printf("Parent exiting now\n");
+        fflush(stdout);
+        _exit(0);
+    } else {
+        printf("Child PID: %d\n", getpid());
+        printf("Original PPID: %d\n", getppid());
+        printf("Child sleeping for 10 seconds...\n");
+        fflush(stdout);
+
         sleep(10);
-        printf("Child is awake now\n");
-	}
-	return 0;
+
+        printf("Child awake\n");
+        printf("New PPID: %d\n", getppid());
+        fflush(stdout);
+    }
+
+    return 0;
 }
 
 

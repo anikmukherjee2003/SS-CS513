@@ -1,29 +1,31 @@
-/*
- * Problem 1: Creating a symbolic link
- *
- * Problem statement: Use the symlink() system call to create a soft link to an existing file and report the result.
- */
 
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <fcntl.h>
 
-int main(){
+int main(void)
+{
+    int fd = open("1.txt", O_CREAT | O_RDWR | O_TRUNC, 0644);
 
-    const char *target1 = "/home/anikm/Hands-On-List1-Files/P1/softlink.txt";
-    const char *linkPath1 = "/home/anikm/Hands-On-List1-Files/P1/SoftLink";
-    int a = symlink(target1,linkPath1); //creating soft link
-    if(a == -1){
-        perror("soft link failed\n");
-        exit(1);
+    if (fd == -1) {
+        perror("Error opening 1.txt");
+        exit(EXIT_FAILURE);
     }
-    printf("Sucessfully Soft link created\n");
+
+    int fd1 = dup2(fd, STDOUT_FILENO);
+
+    if (fd1 == -1) {
+        perror("dup2");
+        close(fd);
+        exit(EXIT_FAILURE);
+    }
+
+    printf("Hello\n");
+    fflush(stdout);
+
+    close(fd);
+    close(STDOUT_FILENO);
 
     return 0;
 }
-
-
-
-
-
-

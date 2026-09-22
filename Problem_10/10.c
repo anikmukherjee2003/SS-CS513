@@ -10,53 +10,71 @@
  */
 
 
+
 #include <stdio.h>
+#include <stdlib.h>
 #include <fcntl.h>
 #include <unistd.h>
-#include <stdlib.h>
+#include <string.h>
 
-int main() {
+int main(void)
+{
     int fd;
-    off_t offset;
-    char buff1[10] = "AAYANKIONK";   // first 10 B
-    char buff2[10] = "0202111199";   // next 10  B
+    char buff1[] = "ANIK3IIITB";
+    char buff2[] = "SYSTEMSLAB!";
 
-    // open file in read-write mode (create if not exists, truncate if exists)
-    fd = open("10.txt", O_RDWR | O_CREAT | O_TRUNC, 0644);
+    // Create/open file and clear old contents
+    fd = open("sparse.txt", O_RDWR | O_CREAT | O_TRUNC, 0644);
+
     if (fd == -1) {
         perror("open");
-        exit(1);
+        return 1;
     }
 
-    
-    if (write(fd, buff1, 10) != 10) { //10B written
-        perror("Write in Buff1");
+    // Write first 10 bytes
+    if (write(fd, buff1, 10) != 10) {
+        perror("write");
         close(fd);
-        exit(1);
+        return 1;
     }
 
-    
-    offset = lseek(fd, 10, SEEK_CUR);  //moving by 10B
-    if (offset == -1) {
+    // Move file offset directly to byte 20
+    if (lseek(fd, 20, SEEK_SET) == -1) {
         perror("lseek");
         close(fd);
-        exit(1);
+        return 1;
     }
 
-    printf("lseek Return Value (new offset): %ld\n", (long)offset);
-
-    // write second 10 bytes
+    // Write next 10 bytes
     if (write(fd, buff2, 10) != 10) {
-        perror("Write in Buff2");
+        perror("write");
         close(fd);
-        exit(1);
+        return 1;
     }
+
+    printf("Sparse file created successfully.\n");
 
     close(fd);
     return 0;
 }
 
-
+/*
+anikm@ANIK:~/Hands-On-List1-Files/Problem_10$ ./10
+Sparse file created successfully.
+anikm@ANIK:~/Hands-On-List1-Files/Problem_10$ stat sparse.txt
+  File: sparse.txt
+  size: 30              Blocks: 8          IO Block: 4096   regular file
+Device: 8,48    Inode: 1739        Links: 1
+Access: (0644/-rw-r--r--)  Uid: ( 1000/   anikm)   Gid: ( 1000/   anikm)
+Access: 2026-09-21 17:28:24.278042906 +0000
+Modify: 2026-09-21 17:28:15.774044989 +0000
+Change: 2026-09-21 17:28:15.774044989 +0000
+ Birth: 2026-09-21 17:27:27.690058271 +0000
+anikm@ANIK:~/Hands-On-List1-Files/Problem_10$ od -c sparse.txt
+0000000   A   N   I   K   3   I   I   I   T   B  \0  \0  \0  \0  \0  \0
+0000020  \0  \0  \0  \0   S   Y   S   T   E   M   S   L   A   B
+0000036
+*/
 
 
 

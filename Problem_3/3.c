@@ -11,7 +11,7 @@
 
 int main() {
     /* Name of the file to create */
-    const char *file_path = "anik.txt";
+    const char *file_path = "debarati.txt";
 
     /* 0644 means rw-r--r--
      * - owner: read/write

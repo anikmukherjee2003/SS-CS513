@@ -9,35 +9,62 @@
  */
 
 
+
 #include <stdio.h>
+#include <stdlib.h>
 #include <unistd.h>
 #include <fcntl.h>
-#include <string.h>
 #include <sys/stat.h>
 
-int main(){
+int main(void)
+{
+    int fd = open("16.txt", O_RDONLY | O_CREAT, 0666);
 
-        struct flock fm;
-        char s[100];
-        int fq = open("16b.txt", O_RDWR | O_CREAT, 0666);
-        fm.l_type = F_RDLCK;
-        fm.l_whence = SEEK_SET;
-        fm.l_start = 0;
-        fm.l_len = 0;
-        fm.l_pid = getpid();
+    if (fd == -1) {
+        perror("open");
+        return EXIT_FAILURE;
+    }
 
-        printf("Before locking the file for reading\n");
-        fcntl(fq, F_SETLKW, &fm);
-        printf("Read lock acquired successfully....\n");
-        printf("Press a key to unlock...\n");
-        getchar();
+    // Traditional mandatory-locking permission setup
+    if (fchmod(fd, S_ISGID | S_IRUSR | S_IWUSR) == -1) {
+        perror("fchmod");
+        close(fd);
+        return EXIT_FAILURE;
+    }
 
-        fm.l_type = F_UNLCK;
-        fcntl(fq, F_SETLK, &fm);
-        printf("Finish\n");
-        return 0;
+    struct flock lock = {0};
+
+    lock.l_type = F_RDLCK;      // Read lock
+    lock.l_whence = SEEK_SET;   // Start relative to file beginning
+    lock.l_start = 0;           // Start at byte 0
+    lock.l_len = 0;             // Lock through EOF
+
+    printf("Requesting read lock...\n");
+    fflush(stdout);
+
+    if (fcntl(fd, F_SETLKW, &lock) == -1) {
+        perror("fcntl lock");
+        close(fd);
+        return EXIT_FAILURE;
+    }
+
+    printf("Read lock acquired!\n");
+    printf("Press Enter to release the lock...\n");
+    getchar();
+
+    lock.l_type = F_UNLCK;
+
+    if (fcntl(fd, F_SETLK, &lock) == -1) {
+        perror("fcntl unlock");
+        close(fd);
+        return EXIT_FAILURE;
+    }
+
+    printf("Read lock released.\n");
+
+    close(fd);
+    return EXIT_SUCCESS;
 }
-
 
 
 

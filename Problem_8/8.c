@@ -10,57 +10,45 @@
  */
 
 
-#include <stdio.h> 
+
+#include <stdio.h>
+#include <stdlib.h>
 #include <fcntl.h>
 #include <unistd.h>
 
-#define MAX_LINE_LENGTH 2048
-
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
     int fd;
-    char char_buffer; //used to read one char at a time
-    ssize_t bytes_read;
-
-    char line_buffer[MAX_LINE_LENGTH]; // buffer for current line
-    int line_index = 0; 
+    char ch;
+    ssize_t n;
 
     if (argc != 2) {
         printf("Usage: %s <filename>\n", argv[0]);
-        return 1; 
-    }
-
-    fd = open(argv[1], O_RDONLY);
-    if (fd == -1) {
-        perror("Error opening file");
         return 1;
     }
 
-    while ((bytes_read = read(fd, &char_buffer, 1)) > 0) {
-        line_buffer[line_index] = char_buffer;
-        line_index++;
+    fd = open(argv[1], O_RDONLY);
 
-
-        if (char_buffer == '\n') {
-            write(1, line_buffer, line_index);
-            line_index = 0;
-        }
-
-        if (line_index >= MAX_LINE_LENGTH) {
-            write(1, line_buffer, line_index);
-            line_index = 0;
-        }
-    }
-    
-    if (line_index > 0) {
-        write(1, line_buffer, line_index);
+    if (fd == -1) {
+        perror("open");
+        return 1;
     }
 
-    if (bytes_read == -1) {
-        perror("Error reading from file");
+    while ((n = read(fd, &ch, 1)) > 0) {
+        if (write(STDOUT_FILENO, &ch, 1) != 1) {
+            perror("write");
+            close(fd);
+            return 1;
+        }
+    }
+
+    if (n == -1) {
+        perror("read");
+        close(fd);
+        return 1;
     }
 
     close(fd);
-
     return 0;
 }
 

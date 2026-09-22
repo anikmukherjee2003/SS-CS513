@@ -11,49 +11,93 @@
 
 
 
+
 #include <stdio.h>
+#include <stdlib.h>
 #include <unistd.h>
-#include <sys/stat.h>
 #include <fcntl.h>
 
-int main()
+int main(void)
 {
-	struct flock fm;
-	int ticketno;
+    struct flock fm = {0};
+    int ticketno;
 
-	int fq = open("ticket.txt", O_RDWR | O_CREAT);
+    int fq = open("ticket.txt", O_RDWR | O_CREAT, 0644);
 
-	if(fq == -1){
-		printf("Error: Could not open the file\n");
-	}
-	else{
-		read(fq, &ticketno, sizeof(ticketno));
-		fm.l_type = F_WRLCK;
-		fm.l_whence = SEEK_SET;
-		fm.l_start = 0;
-		fm.l_len = 0;
-		fm.l_pid = getpid();
+    if (fq == -1) {
+        perror("open");
+        return EXIT_FAILURE;
+    }
 
-		printf("Before entering the critical section...\n");
-		fcntl(fq, F_SETLKW, &fm);
-		printf("Inside the critical section...\n");
-        printf("Previous ticket number: %d\n", ticketno);
-		ticketno++;
-		printf("Current ticket number: %d\n", ticketno);
+    fm.l_type = F_WRLCK;
+    fm.l_whence = SEEK_SET;
+    fm.l_start = 0;
+    fm.l_len = 0;
 
-		lseek(fq, 0, SEEK_SET);
-		write(fq, &ticketno, sizeof(ticketno));
-		printf("Press any key to unlock and exit");
-		getchar();
+    printf("Before entering the critical section...\n");
+    fflush(stdout);
 
-		fm.l_type = F_UNLCK;
-		fcntl(fq, F_SETLK, &fm);
-		close(fq);
-		printf("Completed!!!\n");
-	}
-	return 0;
+    if (fcntl(fq, F_SETLKW, &fm) == -1) {
+        perror("fcntl lock");
+        close(fq);
+        return EXIT_FAILURE;
+    }
+
+    printf("Inside the critical section...\n");
+
+    // Read only after acquiring the lock
+    if (lseek(fq, 0, SEEK_SET) == -1) {
+        perror("lseek");
+        close(fq);
+        return EXIT_FAILURE;
+    }
+
+    ssize_t n = read(fq, &ticketno, sizeof(ticketno));
+
+    if (n != sizeof(ticketno)) {
+        fprintf(stderr, "Could not read a complete ticket number\n");
+        close(fq);
+        return EXIT_FAILURE;
+    }
+
+    printf("Previous ticket number: %d\n", ticketno);
+
+    ticketno++;
+
+    if (lseek(fq, 0, SEEK_SET) == -1) {
+        perror("lseek");
+        close(fq);
+        return EXIT_FAILURE;
+    }
+
+    n = write(fq, &ticketno, sizeof(ticketno));
+
+    if (n != sizeof(ticketno)) {
+        perror("write");
+        close(fq);
+        return EXIT_FAILURE;
+    }
+
+    printf("Current ticket number: %d\n", ticketno);
+    printf("Press Enter to unlock and exit: ");
+    fflush(stdout);
+
+    getchar();
+
+    fm.l_type = F_UNLCK;
+
+    if (fcntl(fq, F_SETLK, &fm) == -1) {
+        perror("fcntl unlock");
+        close(fq);
+        return EXIT_FAILURE;
+    }
+
+    close(fq);
+
+    printf("Completed!!!\n");
+
+    return EXIT_SUCCESS;
 }
-
 
 
 

@@ -1,4 +1,4 @@
-/*
+*
  * Problem 1: Creating a FIFO
  *
  * Problem statement: Create named pipes using the mkfifo() library function and the mknod() system call.
