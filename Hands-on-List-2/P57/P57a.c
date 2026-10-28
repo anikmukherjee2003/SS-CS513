@@ -26,5 +26,6 @@
  * operation, checks return values, and cleans up before exiting.
  */
 int main(void) {
-    return print_limit("Maximum exec argument bytes (_SC_ARG_MAX)", _SC_ARG_MAX);
+    return print_limit("Maximum exec argument bytes (_SC_ARG_MAX)",
+                       _SC_ARG_MAX);
 }

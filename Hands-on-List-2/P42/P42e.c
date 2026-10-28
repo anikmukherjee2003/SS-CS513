@@ -25,6 +25,4 @@
  * The function sets up the required resources, invokes the relevant OS
  * operation, checks return values, and cleans up before exiting.
  */
-int main(void) {
-    return inspect('e');
-}
+int main(void) { return inspect('e'); }

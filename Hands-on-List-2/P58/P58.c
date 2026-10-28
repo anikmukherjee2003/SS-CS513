@@ -29,8 +29,8 @@
 
 static void *worker(void *arg) {
     long n = (long)arg;
-    printf("Worker %ld: pthread_self=%lu, Linux TID=%ld\n", n, (unsigned long)pthread_self(),
-           (long)syscall(SYS_gettid));
+    printf("Worker %ld: pthread_self=%lu, Linux TID=%ld\n", n,
+           (unsigned long)pthread_self(), (long)syscall(SYS_gettid));
     return NULL;
 }
 

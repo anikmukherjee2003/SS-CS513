@@ -55,7 +55,8 @@ int main(void) {
         perror("shmat");
         return 1;
     }
-    snprintf(p, 4096, "Shared-memory text written by P47a (PID %ld)", (long)getpid());
+    snprintf(p, 4096, "Shared-memory text written by P47a (PID %ld)",
+             (long)getpid());
     printf("Wrote: %s\nShared memory ID: %d\n", p, id);
     if (shmdt(p) == -1) {
         perror("shmdt");

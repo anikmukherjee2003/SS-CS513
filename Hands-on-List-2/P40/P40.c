@@ -20,9 +20,9 @@
  */
 
 #define _GNU_SOURCE
+#include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <fcntl.h>
 #include <sys/resource.h>
 #include <unistd.h>
 
@@ -41,7 +41,8 @@ int main(void) {
     if (l.rlim_cur == RLIM_INFINITY)
         puts("Maximum open files (soft limit): unlimited");
     else
-        printf("Maximum open files (soft limit): %llu\n", (unsigned long long)l.rlim_cur);
+        printf("Maximum open files (soft limit): %llu\n",
+               (unsigned long long)l.rlim_cur);
     if (pipe(p) == -1) {
         perror("pipe");
         return EXIT_FAILURE;

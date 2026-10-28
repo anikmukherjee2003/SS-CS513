@@ -34,14 +34,14 @@ For the second collection:
 
 ```sh
 cd Hands-on-List-2
-gcc -std=gnu11 -Wall -Wextra P31/P31.c -o /tmp/P31
-/tmp/P31
+gcc -std=gnu11 -Wall -Wextra P31/P31.c -o P31/P31
+./P31/P31
 ```
 
 Use `-pthread` when compiling the pthread examples, such as `P52a.c`, `P52b.c`, and `P58.c`:
 
 ```sh
-gcc -std=gnu11 -Wall -Wextra -pthread P58/P58.c -o /tmp/P58
+gcc -std=gnu11 -Wall -Wextra -pthread P58/P58.c -o P58/P58
 ```
 
 Run programs from their exercise directory when they use relative paths or sample data files. Check the exercise notes for required arguments, peer programs, and cleanup steps.

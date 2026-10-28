@@ -24,7 +24,8 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
-static int trace(const char *cmd, const char *path, int m) {
+static int trace(const char *cmd, const char *path,
+                 int m) { //'m' is flag which tell whether to add 'p' at the end
     pid_t p = fork();
     int s;
     if (p == -1) {
@@ -33,10 +34,11 @@ static int trace(const char *cmd, const char *path, int m) {
     }
     if (p == 0) {
         if (m)
-            execlp("strace", "strace", "-c", "-e", "trace=mknod,mknodat", cmd, path, "p",
-                   (char *)NULL);
+            execlp("strace", "strace", "-c", "-e", "trace=mknod,mknodat", cmd,
+                   path, "p", (char *)NULL);
         else
-            execlp("strace", "strace", "-c", "-e", "trace=mknod,mknodat", cmd, path, (char *)NULL);
+            execlp("strace", "strace", "-c", "-e", "trace=mknod,mknodat", cmd,
+                   path, (char *)NULL);
         perror("exec strace (install strace if missing)");
         _exit(127);
     }
@@ -54,17 +56,21 @@ static int trace(const char *cmd, const char *path, int m) {
  */
 int main(void) {
     char a[80], b[80];
-    snprintf(a, sizeof a, "/tmp/oslab_mknod_%ld", (long)getpid());
-    snprintf(b, sizeof b, "/tmp/oslab_mkfifo_%ld", (long)getpid());
+    snprintf(a, sizeof a, "/tmp/oslab_mknod_%ld",
+             (long)getpid()); // generate FIFO name a=/tmp/oslab_mknod_<PID>
+    snprintf(b, sizeof b, "/tmp/oslab_mkfifo_%ld",
+             (long)getpid()); // generate FIFO name b=/tmp/oslab_mkfifo_<PID>
     puts("System-call summary for mknod:");
-    if (trace("mknod", a, 1) != 0)
+    if (trace("mknod", a, 1) !=
+        0) // falg m = 1, means mknod /tmp/oslab_mknod_<PID> p
         return EXIT_FAILURE;
     puts("System-call summary for mkfifo:");
     if (trace("mkfifo", b, 0) != 0) {
         unlink(a);
         return EXIT_FAILURE;
     }
-    puts("Compare syscall counts and elapsed time; results depend on this machine and its "
+    puts("Compare syscall counts and elapsed time; results depend on this "
+         "machine and its "
          "utilities.");
     unlink(a);
     unlink(b);

@@ -25,6 +25,4 @@
  * The function sets up the required resources, invokes the relevant OS
  * operation, checks return values, and cleans up before exiting.
  */
-int main(void) {
-    return run_pipeline(USE_DUP2);
-}
+int main(void) { return run_pipeline(USE_DUP2); }

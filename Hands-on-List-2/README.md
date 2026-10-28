@@ -18,16 +18,15 @@ with Windows MinGW.
 Run commands from this directory. For example:
 
 ```sh
-gcc -std=gnu11 -Wall -Wextra -pthread P31/P31.c -o /tmp/P31
-/tmp/P31
+gcc -std=gnu11 -Wall -Wextra -pthread P31/P31.c -o P31/P31
+./P31/P31
 ```
 
-Build every C entry point into a local `build/` directory:
+Build every C entry point into its exercise folder:
 
 ```sh
-mkdir -p build
 while IFS= read -r source; do
-    output="build/$(basename "${source%.c}")"
+    output="$(dirname "$source")/$(basename "${source%.c}")"
     gcc -std=gnu11 -Wall -Wextra -pthread "$source" -o "$output" || exit 1
 done < <(find P* -type f -name '*.c' | sort)
 ```

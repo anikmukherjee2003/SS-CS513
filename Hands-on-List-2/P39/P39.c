@@ -21,9 +21,9 @@
 
 #define _GNU_SOURCE
 #include <errno.h>
+#include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <fcntl.h>
 #include <sys/select.h>
 #include <sys/stat.h>
 #include <unistd.h>
@@ -34,83 +34,53 @@
  * operation, checks return values, and cleans up before exiting.
  */
 int main(int argc, char **argv) {
-
     const char *p = argc > 1 ? argv[1] : "/tmp/oslab_p39_fifo";
-
     int fd;
-
     fd_set set;
-
-    struct timeval tv =
-        {
-
-            .tv_sec = 10, .tv_usec = 0}
-
-    ;
-
+    struct timeval tv = {.tv_sec = 10, .tv_usec = 0};
     char b[256];
 
     if (mkfifo(p, 0600) == -1 && errno != EEXIST) {
-
         perror("mkfifo");
-
         return EXIT_FAILURE;
     }
 
-    /* Linux O_RDWR prevents immediate EOF before a writer appears. */ fd =
-        open(p, O_RDWR | O_NONBLOCK);
-
+    /* Linux O_RDWR prevents immediate EOF before a writer appears. */
+    fd = open(p, O_RDWR | O_NONBLOCK);
     if (fd == -1) {
-
         perror("open");
-
         return EXIT_FAILURE;
     }
 
     printf("Waiting up to 10 seconds for data on %s...\n", p);
-
     fflush(stdout);
 
     FD_ZERO(&set);
-
     FD_SET(fd, &set);
-
     int ready = select(fd + 1, &set, NULL, NULL, &tv);
 
     if (ready == -1) {
-
         perror("select");
-
         close(fd);
-
         return EXIT_FAILURE;
     }
 
     if (ready == 0) {
-
         puts("Timed out without data.");
-
         close(fd);
-
         return EXIT_SUCCESS;
     }
 
     ssize_t n = read(fd, b, sizeof b - 1);
-
     if (n == -1 && (errno == EAGAIN || errno == EWOULDBLOCK))
         puts("No bytes were available.");
-
     else if (n == -1)
         perror("read");
-
     else {
-
         b[n] = '\0';
-
         printf("Received: %s\n", b);
     }
 
     close(fd);
-
     return EXIT_SUCCESS;
 }

@@ -26,5 +26,6 @@
  * operation, checks return values, and cleans up before exiting.
  */
 int main(void) {
-    return print_limit("Available physical pages (_SC_AVPHYS_PAGES)", _SC_AVPHYS_PAGES);
+    return print_limit("Available physical pages (_SC_AVPHYS_PAGES)",
+                       _SC_AVPHYS_PAGES);
 }

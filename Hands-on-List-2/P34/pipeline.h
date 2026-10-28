@@ -22,11 +22,11 @@
 #ifndef OSLAB_P34_PIPELINE_H
 #define OSLAB_P34_PIPELINE_H
 #include <errno.h>
+#include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/wait.h>
 #include <unistd.h>
-#include <fcntl.h>
 
 enum { USE_DUP = 1, USE_DUP2 = 2, USE_FCNTL = 3 };
 
@@ -123,8 +123,8 @@ static int run_pipeline(int method) {
         return EXIT_FAILURE;
     }
 
-    return (WIFEXITED(status1) && WEXITSTATUS(status1) == 0 && WIFEXITED(status2) &&
-            WEXITSTATUS(status2) == 0)
+    return (WIFEXITED(status1) && WEXITSTATUS(status1) == 0 &&
+            WIFEXITED(status2) && WEXITSTATUS(status2) == 0)
                ? EXIT_SUCCESS
                : EXIT_FAILURE;
 }

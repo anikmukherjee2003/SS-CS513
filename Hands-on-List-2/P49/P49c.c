@@ -63,7 +63,8 @@ int main(void) {
         if (p == 0) {
             if (op(id, -1) == -1)
                 _exit(1);
-            printf("PID %ld acquired one of two pseudo-resources\n", (long)getpid());
+            printf("PID %ld acquired one of two pseudo-resources\n",
+                   (long)getpid());
             fflush(stdout);
             sleep(1);
             if (op(id, 1) == -1)

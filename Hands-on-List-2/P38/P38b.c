@@ -19,9 +19,9 @@
  *     the expected operating-system model.
  */
 
+#include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <fcntl.h>
 #include <unistd.h>
 
 /* Client: start P38a in another terminal before this program. */

@@ -25,6 +25,4 @@
  * The function sets up the required resources, invokes the relevant OS
  * operation, checks return values, and cleans up before exiting.
  */
-int main(int argc, char **argv) {
-    return run_server(1, argc, argv);
-}
+int main(int argc, char **argv) { return run_server(1, argc, argv); }

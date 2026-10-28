@@ -39,7 +39,8 @@ int main(void) {
     }
     if (child == 0) {
         sleep(1);
-        printf("Child %ld sends SIGKILL to parent %ld.\n", (long)getpid(), (long)parent);
+        printf("Child %ld sends SIGKILL to parent %ld.\n", (long)getpid(),
+               (long)parent);
         fflush(stdout);
         if (kill(parent, SIGKILL) == -1) {
             perror("kill");
@@ -50,7 +51,8 @@ int main(void) {
         fflush(stdout);
         _exit(0);
     }
-    printf("Parent %ld created child %ld and waits to be killed.\n", (long)parent, (long)child);
+    printf("Parent %ld created child %ld and waits to be killed.\n",
+           (long)parent, (long)child);
     fflush(stdout);
     for (;;)
         pause();

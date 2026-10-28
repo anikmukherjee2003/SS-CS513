@@ -60,7 +60,9 @@ int main(int argc, char **argv) {
         perror("bind/listen");
         return 1;
     }
-    printf("TCP server listening on port %s; start P51b on the other machine.\n", port);
+    printf(
+        "TCP server listening on port %s; start P51b on the other machine.\n",
+        port);
     int c = accept(s, NULL, NULL);
     if (c == -1) {
         perror("accept");

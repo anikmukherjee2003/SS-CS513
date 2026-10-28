@@ -58,7 +58,9 @@ static int run_timer(int which, int sig, const char *label) {
         return 1;
     }
 
-    printf("%s: first expiry is 10 seconds; repeat interval is 10 microseconds.\n", label);
+    printf(
+        "%s: first expiry is 10 seconds; repeat interval is 10 microseconds.\n",
+        label);
     fflush(stdout);
 
     if (which == ITIMER_REAL) {

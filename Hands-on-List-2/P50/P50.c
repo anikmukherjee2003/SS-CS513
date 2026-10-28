@@ -48,7 +48,8 @@ static void child(int id, int first, int second, int ready[2], int gate[2]) {
         _exit(3);
     if (read(gate[0], &c, 1) != 1)
         _exit(4);
-    fprintf(stderr, "Child %d holds semaphore %d and waits for %d.\n", first, first, second);
+    fprintf(stderr, "Child %d holds semaphore %d and waits for %d.\n", first,
+            first, second);
     if (change(id, (unsigned short)second, -1) == -1) {
         perror("semop after deadlock cleanup");
         _exit(0);
@@ -108,7 +109,8 @@ int main(void) {
         return 1;
     }
     close(gate[1]);
-    puts("Both children hold one semaphore and wait on the other's semaphore (deadlock). Removing "
+    puts("Both children hold one semaphore and wait on the other's semaphore "
+         "(deadlock). Removing "
          "the set releases them.");
     sleep(1);
     if (semctl(id, 0, IPC_RMID) == -1)

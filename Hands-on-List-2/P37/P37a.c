@@ -19,12 +19,13 @@
  *     the expected operating-system model.
  */
 
+#include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <fcntl.h>
 #include <unistd.h>
 
-/* Reader. Start P37b first; it creates the FIFO and blocks until this reader opens it. */
+/* Reader. Start P37b first; it creates the FIFO and blocks until this reader
+ * opens it. */
 /*
  * Main entry point for this exercise.
  * The function sets up the required resources, invokes the relevant OS

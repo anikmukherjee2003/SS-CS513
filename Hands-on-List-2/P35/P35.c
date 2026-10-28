@@ -146,7 +146,8 @@ int main(void) {
 
     close(grep_to_wc[1]);
 
-    if (waitpid(ls_pid, &ls_status, 0) == -1 || waitpid(grep_pid, &grep_status, 0) == -1 ||
+    if (waitpid(ls_pid, &ls_status, 0) == -1 ||
+        waitpid(grep_pid, &grep_status, 0) == -1 ||
         waitpid(wc_pid, &wc_status, 0) == -1) {
 
         perror("waitpid");
@@ -154,12 +155,13 @@ int main(void) {
         return EXIT_FAILURE;
     }
 
-    /* grep exits with status 1 when there are no directories; wc still correctly prints 0. */
-    int grep_ok =
-        WIFEXITED(grep_status) && (WEXITSTATUS(grep_status) == 0 || WEXITSTATUS(grep_status) == 1);
+    /* grep exits with status 1 when there are no directories; wc still
+     * correctly prints 0. */
+    int grep_ok = WIFEXITED(grep_status) && (WEXITSTATUS(grep_status) == 0 ||
+                                             WEXITSTATUS(grep_status) == 1);
 
-    return WIFEXITED(ls_status) && WEXITSTATUS(ls_status) == 0 && grep_ok && WIFEXITED(wc_status) &&
-                   WEXITSTATUS(wc_status) == 0
+    return WIFEXITED(ls_status) && WEXITSTATUS(ls_status) == 0 && grep_ok &&
+                   WIFEXITED(wc_status) && WEXITSTATUS(wc_status) == 0
                ? EXIT_SUCCESS
                : EXIT_FAILURE;
 }

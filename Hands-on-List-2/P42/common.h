@@ -97,7 +97,8 @@ static int inspect(char part) {
     }
 
     case 'e':
-        printf("Current queue size: %lu bytes\n", (unsigned long)ds.__msg_cbytes);
+        printf("Current queue size: %lu bytes\n",
+               (unsigned long)ds.__msg_cbytes);
         break;
 
     case 'f':
@@ -109,8 +110,8 @@ static int inspect(char part) {
         break;
 
     case 'h':
-        printf("PID of last msgsnd: %ld\nPID of last msgrcv: %ld\n", (long)ds.msg_lspid,
-               (long)ds.msg_lrpid);
+        printf("PID of last msgsnd: %ld\nPID of last msgrcv: %ld\n",
+               (long)ds.msg_lspid, (long)ds.msg_lrpid);
         break;
     }
 

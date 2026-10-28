@@ -20,9 +20,9 @@
  */
 
 #include <errno.h>
+#include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <fcntl.h>
 #include <sys/stat.h>
 #include <unistd.h>
 
@@ -44,7 +44,8 @@ int main(int argc, char **argv) {
         perror("open");
         return EXIT_FAILURE;
     }
-    if (write(fd, "One-way FIFO message", sizeof "One-way FIFO message") == -1) {
+    if (write(fd, "One-way FIFO message", sizeof "One-way FIFO message") ==
+        -1) {
         perror("write");
         close(fd);
         return EXIT_FAILURE;

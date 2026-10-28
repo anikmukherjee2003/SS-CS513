@@ -25,6 +25,4 @@
  * The function sets up the required resources, invokes the relevant OS
  * operation, checks return values, and cleans up before exiting.
  */
-int main(void) {
-    return print_limit("Page size (_SC_PAGESIZE)", _SC_PAGESIZE);
-}
+int main(void) { return print_limit("Page size (_SC_PAGESIZE)", _SC_PAGESIZE); }

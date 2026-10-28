@@ -26,5 +26,6 @@
  * operation, checks return values, and cleans up before exiting.
  */
 int main(void) {
-    return print_limit("Maximum processes per real UID (_SC_CHILD_MAX)", _SC_CHILD_MAX);
+    return print_limit("Maximum processes per real UID (_SC_CHILD_MAX)",
+                       _SC_CHILD_MAX);
 }

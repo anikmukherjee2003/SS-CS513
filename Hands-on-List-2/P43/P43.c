@@ -56,7 +56,8 @@ int main(void) {
         return 1;
     }
     struct msg m = {.type = 1};
-    snprintf(m.text, sizeof m.text, "Message sent by P43 (PID %ld)", (long)getpid());
+    snprintf(m.text, sizeof m.text, "Message sent by P43 (PID %ld)",
+             (long)getpid());
     if (msgsnd(id, &m, strlen(m.text) + 1, 0) == -1) {
         perror("msgsnd");
         return 1;

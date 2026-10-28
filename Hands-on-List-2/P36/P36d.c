@@ -31,7 +31,8 @@
  */
 int main(int argc, char **argv) {
     const char *p = argc > 1 ? argv[1] : "P36d_fifo";
-    if (mknod(p, S_IFIFO | 0600, 0) == -1) {
+    if (mknod(p, S_IFIFO | 0600, 0) ==
+        -1) { // mknod(path, mode, device)//device is always 0 for FIFO
         perror("mknod");
         return EXIT_FAILURE;
     }

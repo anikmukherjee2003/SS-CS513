@@ -56,7 +56,8 @@ int main(void) {
         perror("SETVAL");
         return 1;
     }
-    int *x = mmap(NULL, sizeof *x, PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);
+    int *x = mmap(NULL, sizeof *x, PROT_READ | PROT_WRITE,
+                  MAP_SHARED | MAP_ANONYMOUS, -1, 0);
     if (x == MAP_FAILED) {
         perror("mmap");
         semctl(id, 0, IPC_RMID);

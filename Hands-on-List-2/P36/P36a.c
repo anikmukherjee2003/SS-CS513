@@ -33,7 +33,9 @@ int main(int argc, char **argv) {
 
     const char *path = argc > 1 ? argv[1] : "P36a_fifo";
 
-    execlp("mknod", "mknod", (char *)path, "p", (char *)NULL);
+    execlp("mknod", "mknod", (char *)path, "p",
+           (char *)NULL); // mknod p36a_fifo p
+    // p operand tells the command to create a FIFO.
 
     perror("exec mknod command");
     return EXIT_FAILURE;

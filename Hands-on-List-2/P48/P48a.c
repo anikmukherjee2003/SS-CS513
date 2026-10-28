@@ -48,6 +48,8 @@ int main(void) {
         semctl(id, 0, IPC_RMID);
         return 1;
     }
-    printf("Binary semaphore ID: %d; initial value: 1\nRemove it with: ipcrm -s %d\n", id, id);
+    printf("Binary semaphore ID: %d; initial value: 1\nRemove it with: ipcrm "
+           "-s %d\n",
+           id, id);
     return 0;
 }

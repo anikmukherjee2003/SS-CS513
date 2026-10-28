@@ -51,6 +51,7 @@ int main(int argc, char **argv) {
         perror("kill SIGCONT");
         return 1;
     }
-    puts("Sent SIGCONT; the target resumes and reports that SIGSTOP could not be caught.");
+    puts("Sent SIGCONT; the target resumes and reports that SIGSTOP could not "
+         "be caught.");
     return 0;
 }

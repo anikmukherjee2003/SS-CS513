@@ -78,7 +78,8 @@ static int run_server(int threaded, int argc, char **argv) {
         return 1;
     }
 
-    printf("%s concurrent server listening on port %s\n", threaded ? "pthread" : "fork", port);
+    printf("%s concurrent server listening on port %s\n",
+           threaded ? "pthread" : "fork", port);
 
     if (!threaded)
         signal(SIGCHLD, SIG_IGN);

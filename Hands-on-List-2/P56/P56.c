@@ -34,7 +34,8 @@ static inline uint64_t tsc_start(void) {
 
 static inline uint64_t tsc_end(void) {
     unsigned lo, hi, aux;
-    __asm__ volatile("rdtscp; lfence" : "=a"(lo), "=d"(hi), "=c"(aux)::"memory");
+    __asm__ volatile("rdtscp; lfence"
+                     : "=a"(lo), "=d"(hi), "=c"(aux)::"memory");
     return ((uint64_t)hi << 32) | lo;
 }
 

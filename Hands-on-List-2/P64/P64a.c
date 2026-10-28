@@ -45,7 +45,8 @@ int main(void) {
     else
         puts("Unexpectedly installed a SIGSTOP handler.");
     signal(SIGCONT, continued);
-    printf("Waiting process PID: %ld. Run P64b with this PID.\n", (long)getpid());
+    printf("Waiting process PID: %ld. Run P64b with this PID.\n",
+           (long)getpid());
     fflush(stdout);
     for (;;)
         pause();
